@@ -4,6 +4,7 @@
  */
 namespace Serps\ErrorDispatcher\Test;
 
+use Serps\ErrorDispatcher\NoMatchingErrorException;
 use Serps\ErrorDispatcher\ErrorMatcher;
 
 class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
@@ -66,5 +67,30 @@ class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
         $match = $errorConfiguration->findMatch('FOO::BAR');
         $this->assertEquals('1st', $match->getName());
     }
+
+    public function testImplicitDefaultHandler(){
+
+        $errorConfiguration = new ErrorMatcher();
+
+        try{
+            $errorConfiguration->handle('FOO', 'foo bar');
+            $this->fail('exception not thrown');
+        }catch(NoMatchingErrorException $e){
+            $this->assertEquals('FOO', $e->getHandledErrorName());
+            $this->assertEquals('foo bar', $e->getHandledErrorMessage());
+        }
+
+    }
+
+    public function testExplicitDefaultHandler(){
+
+        $errorConfiguration = new ErrorMatcher(function(){
+            return "explicit exception";
+        });
+
+        $value = $errorConfiguration->handle('FOO', 'foo bar');
+        $this->assertEquals('explicit exception', $value);
+    }
+
 
 }

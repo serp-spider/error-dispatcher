@@ -18,7 +18,7 @@ class ErrorMatcher {
     {
         if(null == $defaultHandler){
             $defaultHandler = function($errorName, $errorMessage){
-                throw new \Exception('Unhandled error: "' . $errorMessage . '" with code ' . $errorName);
+                throw new NoMatchingErrorException($errorName, $errorMessage);
             };
         }
 
@@ -66,9 +66,9 @@ class ErrorMatcher {
         }
     }
 
-    public function handle($errorName, $errorMessage){
+    public function handle($errorName, $errorMessage = null){
         $match = $this->findMatch($errorName);
-        call_user_func($match->getHandler(), $errorName, $errorMessage);
+        return call_user_func($match->getHandler(), $errorName, $errorMessage);
     }
 
 }
