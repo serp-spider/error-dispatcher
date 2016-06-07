@@ -10,9 +10,11 @@ use Serps\ErrorDispatcher\ErrorMatcher;
 class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testSimpleFind(){
+    public function testSimpleFind()
+    {
         $errorConfiguration = new ErrorMatcher();
-        $errorConfiguration->addHandler('FOO::BAR', function(){});
+        $errorConfiguration->addHandler('FOO::BAR', function () {
+        });
 
         $match = $errorConfiguration->findMatch('FOO::BAR');
         $this->assertEquals('FOO::BAR', $match->getName());
@@ -21,9 +23,11 @@ class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('DEFAULT', $match->getName());
     }
 
-    public function testSimpleWildcard(){
+    public function testSimpleWildcard()
+    {
         $errorConfiguration = new ErrorMatcher();
-        $errorConfiguration->addSimpleHandler('FOO::*', function(){});
+        $errorConfiguration->addSimpleHandler('FOO::*', function () {
+        });
 
         $match = $errorConfiguration->findMatch('FOO::BAR');
         $this->assertEquals('FOO::*', $match->getName());
@@ -38,10 +42,13 @@ class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('DEFAULT', $match->getName());
     }
 
-    public function testMoreThanOneHandler(){
+    public function testMoreThanOneHandler()
+    {
         $errorConfiguration = new ErrorMatcher();
-        $errorConfiguration->addSimpleHandler('FOO::*', function(){});
-        $errorConfiguration->addSimpleHandler('BAR::*', function(){});
+        $errorConfiguration->addSimpleHandler('FOO::*', function () {
+        });
+        $errorConfiguration->addSimpleHandler('BAR::*', function () {
+        });
 
         $match = $errorConfiguration->findMatch('FOO::BAR');
         $this->assertEquals('FOO::*', $match->getName());
@@ -59,38 +66,41 @@ class ErrorMatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('DEFAULT', $match->getName());
     }
 
-    public function testOrder(){
+    public function testOrder()
+    {
         $errorConfiguration = new ErrorMatcher();
-        $errorConfiguration->addSimpleHandler('FOO::BAR', function(){}, '1st');
-        $errorConfiguration->addSimpleHandler('FOO::BAR', function(){}, '2d');
+        $errorConfiguration->addSimpleHandler('FOO::BAR', function () {
+        }, '1st');
+        $errorConfiguration->addSimpleHandler('FOO::BAR', function () {
+        }, '2d');
 
         $match = $errorConfiguration->findMatch('FOO::BAR');
         $this->assertEquals('1st', $match->getName());
     }
 
-    public function testImplicitDefaultHandler(){
+    public function testImplicitDefaultHandler()
+    {
 
         $errorConfiguration = new ErrorMatcher();
 
-        try{
+        try {
             $errorConfiguration->handle('FOO', 'foo bar');
             $this->fail('exception not thrown');
-        }catch(NoMatchingErrorException $e){
+        } catch (NoMatchingErrorException $e) {
             $this->assertEquals('FOO', $e->getHandledErrorName());
             $this->assertEquals('foo bar', $e->getHandledErrorMessage());
         }
 
     }
 
-    public function testExplicitDefaultHandler(){
+    public function testExplicitDefaultHandler()
+    {
 
-        $errorConfiguration = new ErrorMatcher(function(){
-            return "explicit exception";
+        $errorConfiguration = new ErrorMatcher(function () {
+            return 'explicit exception';
         });
 
         $value = $errorConfiguration->handle('FOO', 'foo bar');
         $this->assertEquals('explicit exception', $value);
     }
-
-
 }

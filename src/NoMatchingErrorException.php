@@ -5,7 +5,6 @@
 
 namespace Serps\ErrorDispatcher;
 
-
 class NoMatchingErrorException extends \Exception
 {
 

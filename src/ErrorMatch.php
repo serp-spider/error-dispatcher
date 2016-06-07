@@ -5,7 +5,6 @@
 
 namespace Serps\ErrorDispatcher;
 
-
 class ErrorMatch
 {
 
@@ -38,7 +37,8 @@ class ErrorMatch
      * pattern that matched
      * @return string
      */
-    public function getPattern(){
+    public function getPattern()
+    {
         return $this->pattern;
     }
 
@@ -50,8 +50,4 @@ class ErrorMatch
     {
         return $this->handler;
     }
-
-
-
-
 }
